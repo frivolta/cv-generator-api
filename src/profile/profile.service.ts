@@ -43,6 +43,7 @@ export class ProfileService {
         { id: user.id },
         { relations: ['profile'] },
       );
+      console.log(profile);
       if (!profile) {
         return { ok: false, error: 'Profile not found' };
       }

@@ -11,7 +11,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   constructor(
     private readonly authService: AuthService,
     private authConfig: AuthConfig,
-    private userService: UserService
+    private userService: UserService,
   ) {
     super({
       secretOrKeyProvider: passportJwtSecret({
@@ -28,9 +28,8 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     });
   }
 
-  
   public async validate(payload: any) {
-    const {user} = await this.userService.findByUserId(payload.sub)
+    const { user } = await this.userService.findByUserId(payload.sub);
     return user;
   }
 }

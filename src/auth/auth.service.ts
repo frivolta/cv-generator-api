@@ -30,10 +30,6 @@ export class AuthService {
     });
   }
 
-  get secretKey() {
-    return this.authConfig.secret;
-  }
-
   async cognitoRegister(
     userPool: CognitoUserPool,
     { name, password, email }: AuthRegisterInput,
