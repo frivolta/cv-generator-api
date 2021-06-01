@@ -56,6 +56,7 @@ global['fetch'] = require('node-fetch');
     WorkingExperienceModule,
     EducationModule,
     SkillsetModule,
+    TypeOrmModule.forFeature([Profile, User]),
   ],
   controllers: [AppController, AuthController],
   providers: [AppService],

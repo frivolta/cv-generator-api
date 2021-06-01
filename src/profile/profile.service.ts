@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import ShortUniqueId from 'short-unique-id';
 import { User } from 'src/user/entities/user.entity';
 import { Repository } from 'typeorm';
 import {
@@ -29,7 +30,12 @@ export class ProfileService {
         return { ok: false, error: 'User already has a profile' };
       }
       await this.profiles.save(
-        this.profiles.create({ ...createProfileInput, user }),
+        this.profiles.create({
+          ...createProfileInput,
+          publicUrl: this.generateProfileUrl(),
+          template: 'default',
+          user,
+        }),
       );
       return { ok: true };
     } catch {
@@ -92,5 +98,10 @@ export class ProfileService {
     } catch {
       return { ok: false, error: 'Cannot get user' };
     }
+  }
+
+  generateProfileUrl(): string {
+    const uid = new ShortUniqueId();
+    return uid.randomUUID();
   }
 }
