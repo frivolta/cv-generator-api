@@ -17,6 +17,9 @@ import { EducationModule } from './education/education.module';
 import { Education } from './education/entities/education.entity';
 import { SkillsetModule } from './skillset/skillset.module';
 import { Skillset } from './skillset/entities/skillset.entity';
+import appConfig from './config/app.config';
+import databaseConfig from './config/database.config';
+import { TypeOrmConfigService } from './database/typeorm-config.service';
 
 global['fetch'] = require('node-fetch');
 
@@ -26,30 +29,14 @@ global['fetch'] = require('node-fetch');
     CommonModule,
     ConfigModule.forRoot({
       isGlobal: true,
-      envFilePath: process.env.NODE_ENV === 'dev' ? '.env.dev' : '.env.test',
-      ignoreEnvFile: process.env.NODE_ENV === 'prod',
+      envFilePath: '.env',
       validationSchema: Joi.object({
         NODE_ENV: Joi.string().valid('dev', 'prod', 'test').required(),
-        DB_HOST: Joi.string().required(),
-        DB_PORT: Joi.string().required(),
-        COGNITO_USER_POOL_ID: Joi.string(),
-        COGNITO_CLIENT_ID: Joi.string(),
-        COGNITO_REGION: Joi.string(),
       }),
+      load: [appConfig, databaseConfig],
     }),
-    TypeOrmModule.forRoot({
-      type: 'postgres',
-      host: process.env.DB_HOST,
-      port: +process.env.DB_PORT,
-      username: process.env.DB_USERNAME,
-      password: process.env.DB_PASSWORD,
-      database: process.env.DB_DATABASE,
-      ...(process.env.NODE_ENV === 'prod' && {
-        ssl: { rejectUnauthorized: false },
-      }),
-      entities: [User, Profile, WorkingExperience, Education, Skillset],
-      logging: process.env.NODE_ENV === 'test' ? false : true,
-      synchronize: true,
+    TypeOrmModule.forRootAsync({
+      useClass: TypeOrmConfigService,
     }),
     UserModule,
     ProfileModule,

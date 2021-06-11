@@ -1,28 +1,17 @@
-FROM node:12.19.0-alpine3.9 AS development
+FROM node:14.16.0
+
+RUN npm i -g @nestjs/cli typescript ts-node
+
+COPY package*.json /tmp/app/
+RUN cd /tmp/app && npm install
+
+COPY . /usr/src/app
+RUN cp -a /tmp/app/node_modules /usr/src/app
+COPY ./wait-for-it.sh /opt/wait-for-it.sh
+COPY ./startup.dev.sh /opt/startup.dev.sh
+
 WORKDIR /usr/src/app
-COPY package*.json ./
-
-RUN npm install glob rimraf
-
-RUN npm install --only=development
-
-COPY . .
-
+#RUN rm -rf .env && cp env-example .env
 RUN npm run build
 
-FROM node:12.19.0-alpine3.9 as production
-
-ARG NODE_ENV=production
-ENV NODE_ENV=${NODE_ENV}
-
-WORKDIR /usr/src/app
-
-COPY package*.json ./
-
-RUN npm install --only=production
-
-COPY . .
-
-COPY --from=development /usr/src/app/dist ./dist
-EXPOSE 3000
-CMD ["node", "dist/main"]
+CMD ["/bin/bash", "/opt/startup.dev.sh"]
