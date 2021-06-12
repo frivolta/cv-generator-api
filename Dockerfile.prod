@@ -12,6 +12,7 @@ RUN ["chmod", "+x", "/usr/src/app/docker-entrypoint.sh"]
 COPY ./startup.dev.sh /opt/startup.dev.sh
 
 WORKDIR /usr/src/app
+RUN cp .env.prod .env
 RUN npm run build
 
 CMD ["/bin/bash", "/opt/startup.dev.sh"]
