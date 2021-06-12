@@ -1,3 +1,3 @@
 
 web: npm run start:prod
-release: echo '' > npm run migration:run
+release: npm run migration:run
