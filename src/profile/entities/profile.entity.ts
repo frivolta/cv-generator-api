@@ -1,4 +1,4 @@
-import { IsEmail, IsNotEmpty, IsString } from 'class-validator';
+import { IsNotEmpty, IsString } from 'class-validator';
 import ShortUniqueId from 'short-unique-id';
 import { CoreEntity } from 'src/common/entities/common.entity';
 import { User } from 'src/user/entities/user.entity';
