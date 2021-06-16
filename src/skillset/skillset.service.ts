@@ -38,11 +38,11 @@ export class SkillsetService {
 
   async findAll(user: User): Promise<GetAllSkillsetsOutput> {
     try {
-      const userWithRel = await this.users.findOne(
-        { id: user.id },
-        { relations: ['skillsets'] },
-      );
-      return { ok: true, skillsets: userWithRel.skillsets };
+      const skillsets = await this.skillsets.find({
+        where: { user },
+        order: { order: 'ASC' },
+      });
+      return { ok: true, skillsets };
     } catch {
       return { ok: false, error: 'Cannot find skillsets' };
     }
@@ -114,11 +114,11 @@ export class SkillsetService {
         id: swappedItems[1].id,
         order: swappedItems[0].order,
       });
-      const updatedEducations = await this.skillsets.find({
+      const updatedSkillsets = await this.skillsets.find({
         where: { user },
         order: { order: 'ASC' },
       });
-      return { ok: true, skillsets: updatedEducations };
+      return { ok: true, skillsets: updatedSkillsets };
     } catch {
       return { ok: false, error: 'Cannot change items order' };
     }

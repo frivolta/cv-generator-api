@@ -42,11 +42,11 @@ export class WorkingExperienceService {
 
   async findAll(user: User): Promise<GetAllWorkingExperiencesOutput> {
     try {
-      const userWithRel = await this.users.findOne(
-        { id: user.id },
-        { relations: ['workingExperiences'] },
-      );
-      return { ok: true, workingExperiences: userWithRel.workingExperiences };
+      const workingExperiences = await this.workingExperience.find({
+        where: { user },
+        order: { order: 'ASC' },
+      });
+      return { ok: true, workingExperiences };
     } catch {
       return { ok: false, error: 'Cannot find working experience' };
     }
@@ -121,11 +121,11 @@ export class WorkingExperienceService {
         id: swappedItems[1].id,
         order: swappedItems[0].order,
       });
-      const updatedEducations = await this.workingExperience.find({
+      const updatedWe = await this.workingExperience.find({
         where: { user },
         order: { order: 'ASC' },
       });
-      return { ok: true, educations: updatedEducations };
+      return { ok: true, workingExperiences: updatedWe };
     } catch {
       return { ok: false, error: 'Cannot change items order' };
     }
