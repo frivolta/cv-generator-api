@@ -7,11 +7,4 @@ import { GetCompleteUserProfileOutput } from './profile/dtos/get-complete-user-p
 @Controller()
 export class AppController {
   constructor(private readonly appService: AppService) {}
-
-  @Get(':id')
-  getPublicProfile(
-    @Param() { id }: { id: string },
-  ): Promise<GetCompleteUserProfileOutput> {
-    return this.appService.getPublicProfile(id);
-  }
 }

@@ -9,6 +9,7 @@ import {
   UseGuards,
   Req,
   Patch,
+  BadRequestException,
 } from '@nestjs/common';
 import { EducationService } from './education.service';
 import {
@@ -36,6 +37,15 @@ export class EducationController {
     @Body() createEducationInput: CreateEducationInput,
   ): Promise<CreateEducationOutput> {
     return this.educationService.create(request.user, createEducationInput);
+  }
+
+  @Post('changeOrder')
+  @UseGuards(AuthGuard('jwt'))
+  changeOrder(
+    @Req() request: RequestWithUser,
+    @Body() changeOrderInput: number[],
+  ): Promise<CreateEducationOutput | BadRequestException> {
+    return this.educationService.changeOrder(request.user, changeOrderInput);
   }
 
   @Get()

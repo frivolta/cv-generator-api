@@ -37,6 +37,6 @@ export default class CreateUser implements Seeder {
         user.skillsets = skillsets;
         return user;
       })
-      .createMany(5);
+      .create({ email: 'rivoltafilippo@gmail.com' });
   }
 }
