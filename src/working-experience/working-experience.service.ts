@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/user/entities/user.entity';
 import { Repository } from 'typeorm';
@@ -97,6 +97,37 @@ export class WorkingExperienceService {
       return { ok: false, error: 'Permission denied' };
     } catch {
       return { ok: false, error: 'Cannot remove working experience' };
+    }
+  }
+  async changeOrder(user: User, newOrder: number[]) {
+    try {
+      const workingExperience = await this.workingExperience.find({
+        where: { user },
+        order: { order: 'ASC' },
+      });
+      const swappedItems = workingExperience.filter(
+        (education, idx) => education.order !== newOrder[idx],
+      );
+      if (swappedItems.length !== 2) {
+        new BadRequestException(
+          'Cannot change items order, too many arguments',
+        );
+      }
+      await this.workingExperience.save({
+        id: swappedItems[0].id,
+        order: swappedItems[1].order,
+      });
+      await this.workingExperience.save({
+        id: swappedItems[1].id,
+        order: swappedItems[0].order,
+      });
+      const updatedEducations = await this.workingExperience.find({
+        where: { user },
+        order: { order: 'ASC' },
+      });
+      return { ok: true, educations: updatedEducations };
+    } catch {
+      return { ok: false, error: 'Cannot change items order' };
     }
   }
 }

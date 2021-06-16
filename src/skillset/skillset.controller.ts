@@ -72,4 +72,13 @@ export class SkillsetController {
   ): Promise<RemoveSkillsetOutput> {
     return this.skillsets.remove(request.user, +id);
   }
+
+  @Post('changeOrder')
+  @UseGuards(AuthGuard('jwt'))
+  changeOrder(
+    @Req() request: RequestWithUser,
+    @Body() changeOrderInput: number[],
+  ): Promise<CreateSkillsetOutput> {
+    return this.skillsets.changeOrder(request.user, changeOrderInput);
+  }
 }

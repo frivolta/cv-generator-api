@@ -44,7 +44,7 @@ export class EducationController {
   changeOrder(
     @Req() request: RequestWithUser,
     @Body() changeOrderInput: number[],
-  ): Promise<CreateEducationOutput | BadRequestException> {
+  ): Promise<CreateEducationOutput> {
     return this.educationService.changeOrder(request.user, changeOrderInput);
   }
 

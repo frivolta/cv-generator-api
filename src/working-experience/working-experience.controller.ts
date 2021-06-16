@@ -8,7 +8,10 @@ import {
   Delete,
 } from '@nestjs/common';
 import { WorkingExperienceService } from './working-experience.service';
-import { CreateWorkingExperienceInput } from './dto/create-working-experience.dto';
+import {
+  CreateWorkingExperienceInput,
+  CreateWorkingExperienceOutput,
+} from './dto/create-working-experience.dto';
 import { UpdateWorkingExperienceInput } from './dto/update-working-experience.dto';
 import { Patch, Req, UseGuards } from '@nestjs/common/decorators';
 import { AuthGuard } from '@nestjs/passport';
@@ -62,5 +65,17 @@ export class WorkingExperienceController {
   @UseGuards(AuthGuard('jwt'))
   remove(@Req() request: RequestWithUser, @Param('id') id: string) {
     return this.workingExperienceService.remove(request.user, +id);
+  }
+
+  @Post('changeOrder')
+  @UseGuards(AuthGuard('jwt'))
+  changeOrder(
+    @Req() request: RequestWithUser,
+    @Body() changeOrderInput: number[],
+  ): Promise<CreateWorkingExperienceOutput> {
+    return this.workingExperienceService.changeOrder(
+      request.user,
+      changeOrderInput,
+    );
   }
 }
